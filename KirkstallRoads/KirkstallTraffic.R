@@ -14,7 +14,6 @@ library(dtplyr)  # data.table plus plyr
 library(tidyr)
 library(xlsx)
 
-
 filenames <- c("2016194.xlsx", "2016254.xlsx")
 dates <- c("13 Jun", "14 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "19 Jun")
 
@@ -42,7 +41,7 @@ for ( file in filenames ) {
                              read.xlsx(file,sheetName=date,
                              header=FALSE,colIndex=1:1,rowIndex=89:89)[1,1] )
 
-      colnames(Data1)[1] <- "Time"                                  # Add Column Name to first column
+      colnames(Data1)[1] <- "Time"                                     # Add Column Name to first column
       colnames(Data2)[1] <- "Time"
       
       Tmp1 <- Data1 %>%  select(-Average.Flow)                    %>%  # Remove "Average.Flow" column
@@ -72,7 +71,7 @@ for ( file in filenames ) {
                                 Speed,Count)                           # Re-order columns
 
       
-       FTmp <- rbind(FTmp,Tmp1,Tmp2)                                # Append Tmp1 and Tmp2 to FTmp
+       FTmp <- rbind(FTmp,Tmp1,Tmp2)                                   # Append Tmp1 and Tmp2 to FTmp
    }
 }
 
@@ -80,4 +79,9 @@ for ( file in filenames ) {
 Full <- tbl_df(FTmp)
 rm(Data1,Data2,Dir1,Dir2,Tmp1,Tmp2,FTmp,filenames,dates)
 
+# Example analysis
+# Count of cars by Road/Duration/Date, ignoring Time and Speed
 
+Tmp1 <- Full %>% group_by(Road,Direction,Date) %>% summarise(sum(Count))
+
+ 
